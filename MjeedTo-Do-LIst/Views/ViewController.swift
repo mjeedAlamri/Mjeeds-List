@@ -33,7 +33,7 @@ class ViewController: UIViewController {
     
     lazy var todayContainerView: UIView = {
         let todayContainer = UIView()
-        todayContainer.setDimensions(height: 105, width: 170)
+        todayContainer.setDimensions(height: 10, width: 170)
         todayContainer.backgroundColor = .white
         todayContainer.roundCorners(corners: [.topRight, .bottomLeft], radius: 20)
         return todayContainer
@@ -84,10 +84,8 @@ class ViewController: UIViewController {
         tableView.delegate = self
         tableView.register(TaskCell.self, forCellReuseIdentifier: cellID)
         tableView.backgroundColor = #colorLiteral(red: 0.2549019754, green: 0.2745098174, blue: 0.3019607961, alpha: 1)
-//        navigationItem.leftBarButtonItem = editButtonItem
         tableView.roundCorners(corners: [.topLeft], radius: 80)
         tableView.separatorColor = .white
-        
         return tableView
     }()
     
@@ -123,7 +121,7 @@ class ViewController: UIViewController {
         
         topContainer.addSubview(todayContainerView)
         todayContainerView.centerY(inView: topContainer)
-        todayContainerView.anchor(right: topContainer.rightAnchor, paddingRight: 20 )
+        todayContainerView.anchor(top: topContainer.topAnchor , bottom: topContainer.bottomAnchor , right: topContainer.rightAnchor,paddingTop: 75 , paddingBottom: 5, paddingRight: 20)
 
         topContainer.addSubview(welcomeLabel)
         welcomeLabel.anchor(top: topContainer.topAnchor, left: topContainer.leftAnchor, paddingTop: 10, paddingLeft: 10)
@@ -138,6 +136,7 @@ class ViewController: UIViewController {
         
         view.addSubview(newTaskBTN)
         newTaskBTN.anchor(bottom: view.bottomAnchor, right: view.rightAnchor, paddingBottom: 40, paddingRight: 20)
+        
     }
     
     func configureNavigationBar() {
@@ -147,6 +146,9 @@ class ViewController: UIViewController {
         searchField.obscuresBackgroundDuringPresentation = false
         searchField.searchBar.placeholder = "Search for task"
         searchField.searchResultsUpdater = self
+        searchField.searchBar.tintColor = #colorLiteral(red: 0.002793717897, green: 0.6510958672, blue: 0.7109569311, alpha: 1)
+        searchField.searchBar.barTintColor = #colorLiteral(red: 0.002793717897, green: 0.6510958672, blue: 0.7109569311, alpha: 1)
+        searchField.searchBar.searchTextField.textColor = #colorLiteral(red: 0.002793717897, green: 0.6510958672, blue: 0.7109569311, alpha: 1)
         definesPresentationContext = true
     }
     
@@ -174,8 +176,7 @@ extension ViewController : UITableViewDelegate , UITableViewDataSource {
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: cellID, for: indexPath) as! TaskCell
         let task = searchField.isActive ? filterTask[indexPath.row] : taskStore.alltasks[indexPath.row]
-        cell.checkmarkBTN.setDimensions(height: 60, width: 60)
-//        cell.checkmarkBTN.addTarget(self, action: #selector(completeTaskBTN), for: .touchUpInside)
+        cell.checkmarkBTN.setDimensions(height: 30, width: 30)
         cell.checkmarkBTN.setImage(UIImage(systemName: task.isCompleted ? "checkmark.circle.fill" : "circle"), for: .normal)
 //        if task.isCompleted {
 //            cell.checkmarkBTN.setImage(UIImage(systemName: "checkmark.circle.fill"), for: .normal)
@@ -219,6 +220,7 @@ extension ViewController : UITableViewDelegate , UITableViewDataSource {
             taskStore.alltasks[indexPath.row] = selectedTask
             tableView.reloadData()
         }
+        action.backgroundColor = #colorLiteral(red: 0.002793717897, green: 0.6510958672, blue: 0.7109569311, alpha: 1)
         let config = UISwipeActionsConfiguration(actions: [action])
         config.performsFirstActionWithFullSwipe = false
         return config

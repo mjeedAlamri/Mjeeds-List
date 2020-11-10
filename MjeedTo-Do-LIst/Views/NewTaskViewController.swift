@@ -54,7 +54,7 @@ class NewTaskViewController : UIViewController{
         let text = UITextView()
         text.textAlignment = .center
         text.font = UIFont.boldSystemFont(ofSize: 20)
-        text.backgroundColor = #colorLiteral(red: 0.2110047148, green: 0.2284594158, blue: 0.2538167606, alpha: 1)
+        text.backgroundColor = #colorLiteral(red: 0.1563676894, green: 0.1678637564, blue: 0.2093632221, alpha: 1)
         text.textColor = #colorLiteral(red: 0.002793717897, green: 0.6510958672, blue: 0.7109569311, alpha: 1)
         text.layer.borderColor = #colorLiteral(red: 0.002793717897, green: 0.6510958672, blue: 0.7109569311, alpha: 1)
         text.layer.borderWidth = 3
@@ -75,12 +75,13 @@ class NewTaskViewController : UIViewController{
     let viewButton : UIButton = {
         let button = UIButton(type: .system)
         button.setTitleColor(.white, for: .normal)
-        button.backgroundColor = #colorLiteral(red: 0.1563676894, green: 0.1678637564, blue: 0.2093632221, alpha: 1)
+        button.backgroundColor = #colorLiteral(red: 0.2549019754, green: 0.2745098174, blue: 0.3019607961, alpha: 1)
         button.setDimensions(height: 60, width:  UIScreen.main.bounds.width - 80)
         button.layer.cornerRadius = 30
         button.setTitle("Add Task!", for: .normal)
         button.addTarget(self, action: #selector(addTask), for: .touchUpInside)
         if button.tag == 1 {
+            print("Tag is 1")
             button.addTarget(self, action: #selector(editCurrentTask), for: .touchUpInside)
         }
         return button
@@ -110,7 +111,7 @@ class NewTaskViewController : UIViewController{
     
     
     func configureUI() {
-        view.backgroundColor = #colorLiteral(red: 0.2110047148, green: 0.2284594158, blue: 0.2538167606, alpha: 1)
+        view.backgroundColor = #colorLiteral(red: 0.1563676894, green: 0.1678637564, blue: 0.2093632221, alpha: 1)
         
         view.addSubview(titleTextField)
         titleTextField.anchor(top: view.safeAreaLayoutGuide.topAnchor,
