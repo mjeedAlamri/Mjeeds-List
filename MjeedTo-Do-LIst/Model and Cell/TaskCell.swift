@@ -48,7 +48,10 @@ class TaskCell: UITableViewCell {
         stackView.axis = .vertical
         stackView.distribution = .fillEqually
         addSubview(stackView)
-        stackView.centerY(inView: self, leftAnchor: leftAnchor, paddingLeft: 8)
+        stackView.centerY(inView: self, leftAnchor: leftAnchor, paddingLeft: 20)
+        stackView.anchor(right: checkmarkBTN.leftAnchor, paddingRight: 10)
+        
+        
 //        addSubview(taskDueDate)
 //        taskDueDate.centerY(inView: self)
 //        taskDueDate.anchor(right: checkmarkBTN.leftAnchor, paddingRight: 30)

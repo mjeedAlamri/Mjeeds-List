@@ -137,6 +137,8 @@ class ViewController: UIViewController {
         view.addSubview(newTaskBTN)
         newTaskBTN.anchor(bottom: view.bottomAnchor, right: view.rightAnchor, paddingBottom: 40, paddingRight: 20)
         
+        
+        
     }
     
     func configureNavigationBar() {
@@ -152,6 +154,14 @@ class ViewController: UIViewController {
         definesPresentationContext = true
     }
     
+//    func usersName() {
+//        let alert = UIAlertController(title: nil, message: "What is Yout Name?", preferredStyle: .alert)
+//        let action = UIAlertAction(title:nil, style: .default) { (<#UIAlertAction#>) in
+//            <#code#>
+//        }
+//        
+//    }
+    
 //    func nextTask() {
 //        let task = taskStore.alltasks[0]
 //        monthLabel.text = task.dueDate.convertDate(formattedString: .formattedType10)
@@ -163,6 +173,8 @@ class ViewController: UIViewController {
         newTaskViewController.delegate = self
         newTaskViewController.dueDate.minimumDate = Date()
         navigationController?.pushViewController(newTaskViewController, animated: true)
+        
+
     }
 }
 
@@ -179,14 +191,25 @@ extension ViewController : UITableViewDelegate , UITableViewDataSource {
         let task = searchField.isActive ? filterTask[indexPath.row] : taskStore.alltasks[indexPath.row]
         cell.checkmarkBTN.setDimensions(height: 30, width: 30)
         cell.checkmarkBTN.setImage(UIImage(systemName: task.isCompleted ? "checkmark.circle.fill" : "circle"), for: .normal)
-//        if task.isCompleted {
-//            cell.checkmarkBTN.setImage(UIImage(systemName: "checkmark.circle.fill"), for: .normal)
-//        } else {
-//            cell.checkmarkBTN.setImage(UIImage(systemName: "checkmark.circle"), for: .normal)
-//        }
         cell.setCell(task: task)
+        
+        guard let dueDate = task.dueDate else { return cell }
+        let taskDueDate = task.dueDate?.convertDate(formattedString: .formattedType4)
+        let calendar = Calendar.current
+        let comp = calendar.dateComponents([.month, .day, .hour], from: dueDate, to: Date())
+        if comp.hour! >= 0 && comp.day != 0{
+            cell.taskDueDate.textColor = .red
+            cell.taskDueDate.text = "You'r \(abs(comp.day!)) day(s) behind. (\(taskDueDate!)) "
+        }
+        if comp.day! == 0 && comp.hour! >=  0 && comp.hour! > 23 {
+            cell.taskDueDate.textColor = .yellow
+            cell.taskDueDate.text = "After \(abs(comp.hour!)) hours. (\(taskDueDate!)) "
+        }
+
         return cell
     }
+    
+   
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         let selectedCell = searchField.isActive ? filterTask[indexPath.row] : taskStore.alltasks[indexPath.row]
@@ -227,6 +250,7 @@ extension ViewController : UITableViewDelegate , UITableViewDataSource {
         let action = UIContextualAction(style: .normal, title: "Completed") { [self] (action, view, completion) in
             selectedTask.isCompleted = !selectedTask.isCompleted
             taskStore.alltasks[indexPath.row] = selectedTask
+            
             tableView.reloadData()
         }
         action.backgroundColor = #colorLiteral(red: 0.002793717897, green: 0.6510958672, blue: 0.7109569311, alpha: 1)

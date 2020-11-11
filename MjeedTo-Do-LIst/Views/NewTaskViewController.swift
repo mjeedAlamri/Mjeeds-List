@@ -110,7 +110,6 @@ class NewTaskViewController : UIViewController{
         viewButton.tag = 1
         viewButton.setTitle("Edit task", for: .normal)
         titleTextField.text = task.taskTitle
-        print("Hello")
         additionalTextView.text = task.additionalInfo
         guard let dueDate = task.dueDate else { return }
         self.dueDate.date = dueDate
