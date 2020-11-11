@@ -161,6 +161,7 @@ class ViewController: UIViewController {
     @objc func handleAddingTask() {
         let newTaskViewController = NewTaskViewController()
         newTaskViewController.delegate = self
+        newTaskViewController.dueDate.minimumDate = Date()
         navigationController?.pushViewController(newTaskViewController, animated: true)
     }
 }
@@ -194,6 +195,14 @@ extension ViewController : UITableViewDelegate , UITableViewDataSource {
         vc.task = selectedCell
         vc.indexPath = indexPath
         vc.delegate = self
+        if selectedCell.dueDate == nil {
+            vc.dueDate.isEnabled = false
+            vc.dueDate.minimumDate = Date()
+            vc.dueDateSwitch.isOn = false
+        }else {
+            vc.dueDate.date = selectedCell.dueDate!
+        }
+        tableView.deselectRow(at: indexPath, animated: true)
         navigationController?.pushViewController(vc, animated: true)
     }
     
@@ -226,15 +235,6 @@ extension ViewController : UITableViewDelegate , UITableViewDataSource {
         return config
     }
     
-    
-    @objc func completeTaskBTN() {
-        let cell = TaskCell()
-        if cell.checkmarkBTN.imageView?.image == UIImage(systemName: "checkmark.circle")  {
-            cell.checkmarkBTN.setImage(UIImage(systemName: "checkmark.circle.fill"), for: .normal)
-            print("Button Selected")
-        }
-        print("Hello")
-    }
 
     
     
