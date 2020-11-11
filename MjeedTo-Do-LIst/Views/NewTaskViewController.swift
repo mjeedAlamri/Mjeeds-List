@@ -44,8 +44,7 @@ class NewTaskViewController : UIViewController{
     
     var dueDate : UIDatePicker = {
         let dueDate = UIDatePicker()
-        dueDate.minimumDate = Date()
-        dueDate.isEnabled = false
+        dueDate.isEnabled = true
         dueDate.tintColor = #colorLiteral(red: 0.002793717897, green: 0.6510958672, blue: 0.7109569311, alpha: 1)
         return dueDate
     }()
@@ -54,7 +53,7 @@ class NewTaskViewController : UIViewController{
         let text = UITextView()
         text.textAlignment = .center
         text.font = UIFont.boldSystemFont(ofSize: 20)
-        text.backgroundColor = #colorLiteral(red: 0.2110047148, green: 0.2284594158, blue: 0.2538167606, alpha: 1)
+        text.backgroundColor = #colorLiteral(red: 0.1563676894, green: 0.1678637564, blue: 0.2093632221, alpha: 1)
         text.textColor = #colorLiteral(red: 0.002793717897, green: 0.6510958672, blue: 0.7109569311, alpha: 1)
         text.layer.borderColor = #colorLiteral(red: 0.002793717897, green: 0.6510958672, blue: 0.7109569311, alpha: 1)
         text.layer.borderWidth = 3
@@ -65,6 +64,7 @@ class NewTaskViewController : UIViewController{
     
     var dueDateSwitch : UISwitch = {
         let switchy = UISwitch()
+        switchy.setOn(true, animated: true)
         switchy.addTarget(self, action: #selector(handleSwitch), for: .valueChanged)
         switchy.tintColor = #colorLiteral(red: 0.002793717897, green: 0.6510958672, blue: 0.7109569311, alpha: 1)
         switchy.onTintColor = #colorLiteral(red: 0.002793717897, green: 0.6510958672, blue: 0.7109569311, alpha: 0.5)
@@ -73,16 +73,13 @@ class NewTaskViewController : UIViewController{
     }()
     
     let viewButton : UIButton = {
-        let button = UIButton(type: .system)
+        var button = UIButton(type: .system)
         button.setTitleColor(.white, for: .normal)
-        button.backgroundColor = #colorLiteral(red: 0.1563676894, green: 0.1678637564, blue: 0.2093632221, alpha: 1)
+        button.backgroundColor = #colorLiteral(red: 0.2549019754, green: 0.2745098174, blue: 0.3019607961, alpha: 1)
         button.setDimensions(height: 60, width:  UIScreen.main.bounds.width - 80)
         button.layer.cornerRadius = 30
-        button.setTitle("Add Task!", for: .normal)
-        button.addTarget(self, action: #selector(addTask), for: .touchUpInside)
-        if button.tag == 1 {
-            button.addTarget(self, action: #selector(editCurrentTask), for: .touchUpInside)
-        }
+        button.setTitle("Add Task", for: .normal)
+        button.addTarget(self, action: #selector(handleButton(_:)), for: .touchUpInside)
         return button
     }()
     
@@ -104,13 +101,25 @@ class NewTaskViewController : UIViewController{
     override func viewDidLoad() {
         super.viewDidLoad()
         configureUI()
-        editCurrentTask()
+        updateTaskWhenVisited()
         
+    }
+    
+    func updateTaskWhenVisited() {
+        guard let task = task else { return }
+        viewButton.tag = 1
+        viewButton.setTitle("Edit task", for: .normal)
+        titleTextField.text = task.taskTitle
+        print("Hello")
+        additionalTextView.text = task.additionalInfo
+        guard let dueDate = task.dueDate else { return }
+        self.dueDate.date = dueDate
+        dueDateSwitch.isOn = true
     }
     
     
     func configureUI() {
-        view.backgroundColor = #colorLiteral(red: 0.2110047148, green: 0.2284594158, blue: 0.2538167606, alpha: 1)
+        view.backgroundColor = #colorLiteral(red: 0.1563676894, green: 0.1678637564, blue: 0.2093632221, alpha: 1)
         
         view.addSubview(titleTextField)
         titleTextField.anchor(top: view.safeAreaLayoutGuide.topAnchor,
@@ -161,30 +170,33 @@ class NewTaskViewController : UIViewController{
         }
     }
     
-    @objc func addTask() {
+    @objc func handleButton(_ tag: UIButton) {
+        if titleTextField.text!.isEmpty {
+            let alert = UIAlertController(title: nil, message: "Please type the task title.😗", preferredStyle: .alert)
+            let action = UIAlertAction(title: "Ok", style: .default) { (_) in}
+            alert.addAction(action)
+            present(alert, animated: true, completion: nil)
+            return
+        }
+        
         guard let title = titleTextField.text else { return }
         guard let additonalInfo = additionalTextView.text else { return }
-        if dueDateSwitch.isOn {
-            let task = Task(taskTitle: title, dueDate: dueDate.date, createdDate: Date() , additionalInfo: additonalInfo, isCompleted: false)
+         
+        let task = Task(taskTitle: title, dueDate: dueDateSwitch.isOn ? dueDate.date : nil, createdDate: Date() , additionalInfo: additonalInfo, isCompleted: false)
+        
+        switch tag.tag {
+        case 0:
             delegate?.addTask(task: task)
-        }else {
-            let task = Task(taskTitle: title, dueDate: nil, createdDate: Date() , additionalInfo: additonalInfo, isCompleted: false)
-            delegate?.addTask(task: task)
+            print("tag is 0")
+            navigationController?.popToRootViewController(animated: true)
+        case 1:
+            guard let indexPath = indexPath else {return}
+            
+            print("tag is 1")
+            delegate?.updateTask(task: task, indexpath: indexPath)
+            navigationController?.popToRootViewController(animated: true)
+        default:
+            break
         }
-        navigationController?.popToRootViewController(animated: true)
-    }
-    
-    @objc func editCurrentTask() {
-        guard let task = task else { return }
-        guard let indexPath = indexPath else { return }
-        guard let dueDate1 = task.dueDate else { return  }
-        viewButton.tag = 1
-        viewButton.setTitle("Edit Task", for: .normal)
-        titleTextField.text     = task.taskTitle
-        dueDate.date            = dueDate1
-        createdDate.text        = task.createdDate.convertDate(formattedString: .formattedType4)
-        additionalTextView.text = task.additionalInfo
-        delegate?.updateTask(task: task, indexpath: indexPath)
-//        navigationController?.popToRootViewController(animated: true)
     }
 }
