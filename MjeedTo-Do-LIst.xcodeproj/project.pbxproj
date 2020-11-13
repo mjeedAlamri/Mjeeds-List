@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		0F0E7E1F255C0661001BD3D3 /* Label Strikeline.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0F0E7E1E255C0661001BD3D3 /* Label Strikeline.swift */; };
 		0F153AE625596C1400029BC6 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0F153AE525596C1400029BC6 /* AppDelegate.swift */; };
 		0F153AE825596C1400029BC6 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0F153AE725596C1400029BC6 /* SceneDelegate.swift */; };
 		0F153AEA25596C1400029BC6 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0F153AE925596C1400029BC6 /* ViewController.swift */; };
@@ -21,6 +22,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		0F0E7E1E255C0661001BD3D3 /* Label Strikeline.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Label Strikeline.swift"; sourceTree = "<group>"; };
 		0F153AE225596C1400029BC6 /* MjeedTo-Do-LIst.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "MjeedTo-Do-LIst.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		0F153AE525596C1400029BC6 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		0F153AE725596C1400029BC6 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -117,6 +119,7 @@
 			isa = PBXGroup;
 			children = (
 				0F153AFA25596DD600029BC6 /* Extenions.swift */,
+				0F0E7E1E255C0661001BD3D3 /* Label Strikeline.swift */,
 			);
 			path = Extenions;
 			sourceTree = "<group>";
@@ -200,6 +203,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				0F0E7E1F255C0661001BD3D3 /* Label Strikeline.swift in Sources */,
 				0F153AEA25596C1400029BC6 /* ViewController.swift in Sources */,
 				0F153B062559820800029BC6 /* NewTaskViewController.swift in Sources */,
 				0F153B0A2559A19F00029BC6 /* TaskStore.swift in Sources */,
