@@ -10,7 +10,7 @@ import UIKit
 private let cellID = "TaskCell"
 
 class ViewController: UIViewController {
-  
+    
     var taskStore : TaskStore!
     var filterTask: [Task] = []
     
@@ -18,7 +18,7 @@ class ViewController: UIViewController {
     var dynamicHeight: CGFloat {
         return UIScreen.main.bounds.height < 800 ? 150 : 200
     }
-
+    
     
     
     lazy var topContainer: UIView = {
@@ -36,6 +36,8 @@ class ViewController: UIViewController {
         todayContainer.setDimensions(height: 10, width: 170)
         todayContainer.backgroundColor = .white
         todayContainer.roundCorners(corners: [.topRight, .bottomLeft], radius: 20)
+        todayContainer.layer.borderColor = #colorLiteral(red: 0.2549019754, green: 0.2745098174, blue: 0.3019607961, alpha: 1)
+        todayContainer.layer.borderWidth = 3
         return todayContainer
     }()
     
@@ -45,9 +47,13 @@ class ViewController: UIViewController {
         label.setDimensions(height: 30, width: 170)
         label.font = UIFont.boldSystemFont(ofSize: 15)
         label.textAlignment = .center
-        let task = taskStore.alltasks[0]
-        label.text = task.dueDate?.convertDate(formattedString: .formattedType10)
-        label.adjustsFontSizeToFitWidth = true
+        label.layer.borderColor = #colorLiteral(red: 0.2549019754, green: 0.2745098174, blue: 0.3019607961, alpha: 1)
+        label.layer.borderWidth = 3
+        if taskStore.alltasks.isEmpty == false {
+            let task = taskStore.alltasks[0]
+            label.text = task.dueDate?.convertDate(formattedString: .formattedType10)
+            label.adjustsFontSizeToFitWidth = true
+        }
         return label
     }()
     
@@ -56,9 +62,11 @@ class ViewController: UIViewController {
         label.textColor = #colorLiteral(red: 0.002793717897, green: 0.6510958672, blue: 0.7109569311, alpha: 1)
         label.textAlignment = .center
         label.font = UIFont.boldSystemFont(ofSize: 16)
-        label.adjustsFontSizeToFitWidth = true
-        let task = taskStore.alltasks[0]
-        label.text = task.taskTitle
+        if taskStore.alltasks.isEmpty == false {
+            label.adjustsFontSizeToFitWidth = true
+            let task = taskStore.alltasks[0]
+            label.text = task.taskTitle
+        }
         return label
     }()
     
@@ -122,7 +130,7 @@ class ViewController: UIViewController {
         topContainer.addSubview(todayContainerView)
         todayContainerView.centerY(inView: topContainer)
         todayContainerView.anchor(top: topContainer.topAnchor , bottom: topContainer.bottomAnchor , right: topContainer.rightAnchor,paddingTop: 75 , paddingBottom: 5, paddingRight: 20)
-
+        
         topContainer.addSubview(welcomeLabel)
         welcomeLabel.anchor(top: topContainer.topAnchor, left: topContainer.leftAnchor, paddingTop: 10, paddingLeft: 10)
         
@@ -151,30 +159,50 @@ class ViewController: UIViewController {
         searchField.searchBar.tintColor = #colorLiteral(red: 0.002793717897, green: 0.6510958672, blue: 0.7109569311, alpha: 1)
         searchField.searchBar.barTintColor = #colorLiteral(red: 0.002793717897, green: 0.6510958672, blue: 0.7109569311, alpha: 1)
         searchField.searchBar.searchTextField.textColor = #colorLiteral(red: 0.002793717897, green: 0.6510958672, blue: 0.7109569311, alpha: 1)
+        let editButton = UIBarButtonItem(title: "Edit", style: .plain, target: self, action: #selector(showEditing(_:)))
+        navigationItem.rightBarButtonItem = editButton
+        
+        let backButton = UIBarButtonItem()
+        backButton.title = "Mjeed's List"
+        navigationItem.backBarButtonItem = backButton
         definesPresentationContext = true
     }
     
-//    func usersName() {
-//        let alert = UIAlertController(title: nil, message: "What is Yout Name?", preferredStyle: .alert)
-//        let action = UIAlertAction(title:nil, style: .default) { (<#UIAlertAction#>) in
-//            <#code#>
-//        }
-//        
-//    }
+    @objc func showEditing(_ sender: UIBarButtonItem)
+    {
+        if(self.tableView.isEditing == true)
+        {
+            tableView.fadeIn()
+            self.tableView.isEditing = false
+            self.navigationItem.rightBarButtonItem?.title = "Edit"
+        }
+        else
+        {
+            tableView.fadeIn()
+            self.tableView.isEditing = true
+            self.navigationItem.rightBarButtonItem?.title = "Done"
+        }
+    }
     
-//    func nextTask() {
-//        let task = taskStore.alltasks[0]
-//        monthLabel.text = task.dueDate.convertDate(formattedString: .formattedType10)
-//    }
-
+    //    func usersName() {
+    //        let alert = UIAlertController(title: nil, message: "What is Yout Name?", preferredStyle: .alert)
+    //        let action = UIAlertAction(title:nil, style: .default) { (<#UIAlertAction#>) in
+    //            <#code#>
+    //        }
+    //
+    //    }
+    
+    //    func nextTask() {
+    //        let task = taskStore.alltasks[0]
+    //        monthLabel.text = task.dueDate.convertDate(formattedString: .formattedType10)
+    //    }
+    
     
     @objc func handleAddingTask() {
         let newTaskViewController = NewTaskViewController()
         newTaskViewController.delegate = self
         newTaskViewController.dueDate.minimumDate = Date()
         navigationController?.pushViewController(newTaskViewController, animated: true)
-        
-
     }
 }
 
@@ -205,16 +233,16 @@ extension ViewController : UITableViewDelegate , UITableViewDataSource {
             cell.taskDueDate.textColor = .yellow
             cell.taskDueDate.text = "After \(abs(comp.hour!)) hours. (\(taskDueDate!)) "
         }
-
         return cell
     }
     
-   
+    
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         let selectedCell = searchField.isActive ? filterTask[indexPath.row] : taskStore.alltasks[indexPath.row]
         let vc = NewTaskViewController()
         vc.title = selectedCell.taskTitle
+        
         vc.task = selectedCell
         vc.indexPath = indexPath
         vc.delegate = self
@@ -230,6 +258,7 @@ extension ViewController : UITableViewDelegate , UITableViewDataSource {
     }
     
     func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
+        
         return true
     }
     
@@ -239,10 +268,21 @@ extension ViewController : UITableViewDelegate , UITableViewDataSource {
             taskStore.removeTask(task)
             tableView.deleteRows(at: [indexPath], with: .automatic)
         }
+        if taskStore.alltasks.isEmpty {
+            nextTaskTitle.text = ""
+            monthLabel.text = ""
+        } else {
+            let task = taskStore.alltasks[0]
+            nextTaskTitle.text = task.taskTitle
+            monthLabel.text = task.dueDate?.convertDate(formattedString: .formattedType10)
+        }
     }
     
     func tableView(_ tableView: UITableView, moveRowAt sourceIndexPath: IndexPath, to destinationIndexPath: IndexPath) {
         taskStore.movetask(from: sourceIndexPath.row, to: destinationIndexPath.row)
+        let task  = taskStore.alltasks[0]
+        nextTaskTitle.text = task.taskTitle
+        monthLabel.text = task.dueDate?.convertDate(formattedString: .formattedType10)
     }
     
     func tableView(_ tableView: UITableView, leadingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
@@ -259,14 +299,16 @@ extension ViewController : UITableViewDelegate , UITableViewDataSource {
         return config
     }
     
-
+    
     
     
 }
 
 extension ViewController: NewTaskViewControllerDelegate {
     func addTask(task: Task) {
-        taskStore.alltasks.append(task)
+        taskStore.alltasks.insert(task, at: 0)
+        nextTaskTitle.text = task.taskTitle
+        monthLabel.text = task.dueDate?.convertDate(formattedString: .formattedType10)
         tableView.reloadData()
     }
     
