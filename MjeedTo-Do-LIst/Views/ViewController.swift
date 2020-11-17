@@ -20,7 +20,6 @@ class ViewController: UIViewController {
     }
     
     
-    
     lazy var topContainer: UIView = {
         let view = UIView()
         view.backgroundColor = #colorLiteral(red: 0.1563676894, green: 0.1678637564, blue: 0.2093632221, alpha: 1)
@@ -34,10 +33,11 @@ class ViewController: UIViewController {
     lazy var todayContainerView: UIView = {
         let todayContainer = UIView()
         todayContainer.setDimensions(height: 10, width: 170)
-        todayContainer.backgroundColor = .white
+        todayContainer.backgroundColor = #colorLiteral(red: 0.1482841671, green: 0.1678923965, blue: 0.2094292343, alpha: 1)
         todayContainer.roundCorners(corners: [.topRight, .bottomLeft], radius: 20)
         todayContainer.layer.borderColor = #colorLiteral(red: 0.2549019754, green: 0.2745098174, blue: 0.3019607961, alpha: 1)
         todayContainer.layer.borderWidth = 3
+        todayContainer.setupShadow(opacity: 1.0 , radius: 20, color: #colorLiteral(red: 0.002793717897, green: 0.6510958672, blue: 0.7109569311, alpha: 1))
         return todayContainer
     }()
     
@@ -46,8 +46,10 @@ class ViewController: UIViewController {
         label.backgroundColor = #colorLiteral(red: 0.002793717897, green: 0.6510958672, blue: 0.7109569311, alpha: 1)
         label.setDimensions(height: 30, width: 170)
         label.font = UIFont.boldSystemFont(ofSize: 15)
+        label.text = "No Tasks 🤗"
         label.textAlignment = .center
         label.layer.borderColor = #colorLiteral(red: 0.2549019754, green: 0.2745098174, blue: 0.3019607961, alpha: 1)
+        label.roundCorners(corners: [.topRight], radius: 20)
         label.layer.borderWidth = 3
         if taskStore.alltasks.isEmpty == false {
             let task = taskStore.alltasks[0]
@@ -62,6 +64,7 @@ class ViewController: UIViewController {
         label.textColor = #colorLiteral(red: 0.002793717897, green: 0.6510958672, blue: 0.7109569311, alpha: 1)
         label.textAlignment = .center
         label.font = UIFont.boldSystemFont(ofSize: 16)
+        label.text = "🥳"
         if taskStore.alltasks.isEmpty == false {
             label.adjustsFontSizeToFitWidth = true
             let task = taskStore.alltasks[0]
@@ -81,6 +84,8 @@ class ViewController: UIViewController {
         label.backgroundColor = .clear
         label.layer.borderWidth = 1
         label.layer.borderColor = #colorLiteral(red: 0.002793717897, green: 0.6510958672, blue: 0.7109569311, alpha: 1)
+        label.setupShadow(opacity: 2, radius: 1, offset: CGSize(width: 2, height: 2), color: #colorLiteral(red: 0.002793717897, green: 0.6510958672, blue: 0.7109569311, alpha: 1))
+        
         label.textAlignment = .left
         label.setDimensions(height: 60, width: 170)
         return label
@@ -88,13 +93,15 @@ class ViewController: UIViewController {
     
     lazy var tableView: UITableView = {
         let tableView = UITableView()
+        
         tableView.dataSource = self
         tableView.delegate = self
         tableView.register(TaskCell.self, forCellReuseIdentifier: cellID)
         tableView.backgroundColor = #colorLiteral(red: 0.2549019754, green: 0.2745098174, blue: 0.3019607961, alpha: 1)
         tableView.roundCorners(corners: [.topLeft], radius: 80)
+        tableView.clipsToBounds = true
         tableView.separatorColor = .white
-        return tableView
+                return tableView
     }()
     
     let newTaskBTN: UIButton = {
@@ -107,6 +114,7 @@ class ViewController: UIViewController {
         button.setImage(UIImage(systemName: "plus"), for: .normal)
         button.tintColor = #colorLiteral(red: 0.002793717897, green: 0.6510958672, blue: 0.7109569311, alpha: 1)
         button.addTarget(self, action: #selector(handleAddingTask), for: .touchUpInside)
+        button.setupShadow(opacity: 1, radius: 20,  color: #colorLiteral(red: 0.002793717897, green: 0.6510958672, blue: 0.7109569311, alpha: 1))
         return button
     }()
     
@@ -122,14 +130,13 @@ class ViewController: UIViewController {
     }
     
     func configureUI() {
-        
         view.backgroundColor = #colorLiteral(red: 0.1563676894, green: 0.1678637564, blue: 0.2093632221, alpha: 1)
         view.addSubview(topContainer)
         topContainer.centerX(inView: view, topAnchor: view.safeAreaLayoutGuide.topAnchor)
         
         topContainer.addSubview(todayContainerView)
         todayContainerView.centerY(inView: topContainer)
-        todayContainerView.anchor(top: topContainer.topAnchor , bottom: topContainer.bottomAnchor , right: topContainer.rightAnchor,paddingTop: 75 , paddingBottom: 5, paddingRight: 20)
+        todayContainerView.anchor(top: topContainer.topAnchor , bottom: topContainer.bottomAnchor , right: topContainer.rightAnchor,paddingTop: 60 , paddingBottom: 15, paddingRight: 20)
         
         topContainer.addSubview(welcomeLabel)
         welcomeLabel.anchor(top: topContainer.topAnchor, left: topContainer.leftAnchor, paddingTop: 10, paddingLeft: 10)
@@ -144,13 +151,11 @@ class ViewController: UIViewController {
         
         view.addSubview(newTaskBTN)
         newTaskBTN.anchor(bottom: view.bottomAnchor, right: view.rightAnchor, paddingBottom: 40, paddingRight: 20)
-        
-        
-        
     }
     
     func configureNavigationBar() {
         configureNavigationBar(withTitle: "Mjeed's List", largeTitleColor: .white, tintColor: #colorLiteral(red: 0.002793717897, green: 0.6510958672, blue: 0.7109569311, alpha: 1), smallTitleColorWhenScrolling: .light, prefersLargeTitles: true)
+        navigationController?.navigationBar.setupShadow(opacity: 1.0, radius: 20, color: #colorLiteral(red: 0.002793717897, green: 0.6510958672, blue: 0.7109569311, alpha: 1))
         
         navigationItem.searchController = searchField
         searchField.obscuresBackgroundDuringPresentation = false
@@ -159,6 +164,7 @@ class ViewController: UIViewController {
         searchField.searchBar.tintColor = #colorLiteral(red: 0.002793717897, green: 0.6510958672, blue: 0.7109569311, alpha: 1)
         searchField.searchBar.barTintColor = #colorLiteral(red: 0.002793717897, green: 0.6510958672, blue: 0.7109569311, alpha: 1)
         searchField.searchBar.searchTextField.textColor = #colorLiteral(red: 0.002793717897, green: 0.6510958672, blue: 0.7109569311, alpha: 1)
+        searchField.searchBar.setupShadow(opacity: 1, radius: 2, offset: CGSize(width: 1, height: 1), color: #colorLiteral(red: 0.002793717897, green: 0.6510958672, blue: 0.7109569311, alpha: 1))
         let editButton = UIBarButtonItem(title: "Edit", style: .plain, target: self, action: #selector(showEditing(_:)))
         navigationItem.rightBarButtonItem = editButton
         
@@ -225,7 +231,7 @@ extension ViewController : UITableViewDelegate , UITableViewDataSource {
         let taskDueDate = task.dueDate?.convertDate(formattedString: .formattedType4)
         let calendar = Calendar.current
         let comp = calendar.dateComponents([.month, .day, .hour], from: dueDate, to: Date())
-        if comp.hour! >= 0 && comp.day != 0{
+        if comp.hour! >= 0 && comp.day != 0 {
             cell.taskDueDate.textColor = .red
             cell.taskDueDate.text = "You'r \(abs(comp.day!)) day(s) behind. (\(taskDueDate!)) "
         }
@@ -242,7 +248,6 @@ extension ViewController : UITableViewDelegate , UITableViewDataSource {
         let selectedCell = searchField.isActive ? filterTask[indexPath.row] : taskStore.alltasks[indexPath.row]
         let vc = NewTaskViewController()
         vc.title = selectedCell.taskTitle
-        
         vc.task = selectedCell
         vc.indexPath = indexPath
         vc.delegate = self
@@ -250,7 +255,7 @@ extension ViewController : UITableViewDelegate , UITableViewDataSource {
             vc.dueDate.isEnabled = false
             vc.dueDate.minimumDate = Date()
             vc.dueDateSwitch.isOn = false
-        }else {
+        } else {
             vc.dueDate.date = selectedCell.dueDate!
         }
         tableView.deselectRow(at: indexPath, animated: true)
@@ -269,8 +274,10 @@ extension ViewController : UITableViewDelegate , UITableViewDataSource {
             tableView.deleteRows(at: [indexPath], with: .automatic)
         }
         if taskStore.alltasks.isEmpty {
-            nextTaskTitle.text = ""
-            monthLabel.text = ""
+            nextTaskTitle.fadeIn()
+            monthLabel.fadeIn()
+            nextTaskTitle.text = "No Tasks 🤗"
+            monthLabel.text = "🥳"
         } else {
             let task = taskStore.alltasks[0]
             nextTaskTitle.text = task.taskTitle
@@ -281,6 +288,8 @@ extension ViewController : UITableViewDelegate , UITableViewDataSource {
     func tableView(_ tableView: UITableView, moveRowAt sourceIndexPath: IndexPath, to destinationIndexPath: IndexPath) {
         taskStore.movetask(from: sourceIndexPath.row, to: destinationIndexPath.row)
         let task  = taskStore.alltasks[0]
+        nextTaskTitle.fadeIn()
+        monthLabel.fadeIn()
         nextTaskTitle.text = task.taskTitle
         monthLabel.text = task.dueDate?.convertDate(formattedString: .formattedType10)
     }
@@ -290,18 +299,13 @@ extension ViewController : UITableViewDelegate , UITableViewDataSource {
         let action = UIContextualAction(style: .normal, title: "Completed") { [self] (action, view, completion) in
             selectedTask.isCompleted = !selectedTask.isCompleted
             taskStore.alltasks[indexPath.row] = selectedTask
-            
             tableView.reloadData()
         }
         action.backgroundColor = #colorLiteral(red: 0.002793717897, green: 0.6510958672, blue: 0.7109569311, alpha: 1)
         let config = UISwipeActionsConfiguration(actions: [action])
         config.performsFirstActionWithFullSwipe = false
         return config
-    }
-    
-    
-    
-    
+    } 
 }
 
 extension ViewController: NewTaskViewControllerDelegate {
@@ -315,6 +319,10 @@ extension ViewController: NewTaskViewControllerDelegate {
     func updateTask(task: Task, indexpath: IndexPath) {
         taskStore.alltasks[indexpath.row] = task
         tableView.reloadRows(at: [indexpath], with: .automatic)
+        if task == taskStore.alltasks[0] {
+            nextTaskTitle.text = task.taskTitle
+            monthLabel.text = task.dueDate?.convertDate(formattedString: .formattedType10)
+        }
         tableView.reloadData()
     }
     

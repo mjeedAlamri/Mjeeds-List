@@ -11,11 +11,12 @@ class TaskCell: UITableViewCell {
     
     var taskTitle : UILabel = {
         let label = UILabel()
-        label.textColor = #colorLiteral(red: 0.002793717897, green: 0.6510958672, blue: 0.7109569311, alpha: 1)
+        label.textColor = #colorLiteral(red: 1, green: 1, blue: 1, alpha: 0.8470588235)
         label.font = UIFont.boldSystemFont(ofSize: 14)
         label.setWidth(width: 180)
         label.adjustsFontSizeToFitWidth = true
         label.textAlignment = .center
+        label.setupShadow(opacity: 1, radius: 0.5, offset: CGSize(width: 1, height: 1), color: #colorLiteral(red: 0.002793717897, green: 0.6510958672, blue: 0.7109569311, alpha: 1))
         return label
     }()
     
@@ -25,6 +26,7 @@ class TaskCell: UITableViewCell {
         label.textColor = #colorLiteral(red: 0.002793717897, green: 0.6510958672, blue: 0.7109569311, alpha: 1)
         label.textAlignment = .center
         label.adjustsFontSizeToFitWidth = true
+        label.setupShadow(opacity: 1, radius: 0.5, offset: CGSize(width: 1, height: 1), color: #colorLiteral(red: 0.002793717897, green: 0.6510958672, blue: 0.7109569311, alpha: 1))
         return label
     }()
     

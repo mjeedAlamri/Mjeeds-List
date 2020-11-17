@@ -533,6 +533,7 @@ extension UIView {
         heightAnchor.constraint(equalToConstant: height).isActive = true
         widthAnchor.constraint(equalToConstant: width).isActive = true
     }
+    
     func setHeight(height: CGFloat) {
         translatesAutoresizingMaskIntoConstraints = false
         heightAnchor.constraint(equalToConstant: height).isActive = true
@@ -605,7 +606,6 @@ extension UIView {
                 return anchoredConstraints
             }
             return anchor(top: superviewTopAnchor, leading: superviewLeadingAnchor, bottom: superviewBottomAnchor, trailing: superviewTrailingAnchor, padding: padding)
-            
         } else {
             return anchoredConstraints
         }
