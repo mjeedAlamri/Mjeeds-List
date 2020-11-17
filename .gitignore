@@ -16,6 +16,7 @@ Icon
 ._*
 
 # Files that might appear in the root of a volume
+.Extenions
 .DocumentRevisions-V100
 .fseventsd
 .Spotlight-V100
