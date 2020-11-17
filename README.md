@@ -1,4 +1,4 @@
-# Mjeeds-List
+# Mjeed's-List
 Simple to-do list App.
 
 
